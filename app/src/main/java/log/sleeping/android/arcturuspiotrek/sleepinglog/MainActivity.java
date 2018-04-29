@@ -1,6 +1,7 @@
 package log.sleeping.android.arcturuspiotrek.sleepinglog;
 
 import android.arch.persistence.room.Room;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,9 +10,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import log.sleeping.android.arcturuspiotrek.sleepinglog.db.AppDatabase;
 import log.sleeping.android.arcturuspiotrek.sleepinglog.entities.User;
@@ -29,13 +34,25 @@ public class MainActivity extends AppCompatActivity {
 
 
         final AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "database-name").allowMainThreadQueries().build();
-        User user = new User("Piotrek", 23);
+        //User user = new User("Piotrek", 23);
 
-        db.userDao().insertAll(user);
+        //db.userDao().insertAll(user);
 
+        List<User> userList = new ArrayList<User>();
+        userList.addAll(db.userDao().getAll());
 
+        String[] names = new String[userList.size()];
+        int[] ages = new int[userList.size()];
+        String[] combinedNamesAndAges = new String[userList.size()];
 
-        ArrayAdapter adapter = new ArrayAdapter<String>(this,R.layout.activity_listview, array);
+        int i = 0;
+        for(User u : userList){
+            combinedNamesAndAges[i] = u.getName() + " " + Integer.toString(u.getAge());
+            names[i] = u.getName();
+            ages[i++] = u.getAge();
+        }
+
+        ArrayAdapter adapter = new ArrayAdapter<String>(this,R.layout.activity_listview, combinedNamesAndAges);
         ListView listView = (ListView) findViewById(R.id.listViewOfUsers);
         listView.setAdapter(adapter);
 
@@ -43,8 +60,19 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, db.userDao().getUserById(1).getName(), Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //Snackbar.make(view, db.userDao().getUserById(1).getName(), Snackbar.LENGTH_LONG)
+                //        .setAction("Action", null).show();
+                Intent addUserActivity = new Intent(MainActivity.this, AddUserActivity.class);
+                //main.putExtra("userRef", userRef);
+                //main.putExtra("login", login);
+                MainActivity.this.startActivity(addUserActivity);
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(getApplicationContext(), "XDDDDDDDDD", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -75,4 +103,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

@@ -20,6 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".listview"></activity>
+        <activity android:name=".AddUserActivity"></activity>
     </application>
 
 </manifest>
