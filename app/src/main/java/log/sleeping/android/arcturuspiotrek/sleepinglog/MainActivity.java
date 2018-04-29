@@ -9,12 +9,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import log.sleeping.android.arcturuspiotrek.sleepinglog.db.AppDatabase;
 import log.sleeping.android.arcturuspiotrek.sleepinglog.entities.User;
 
 public class MainActivity extends AppCompatActivity {
+
+    String[] array = {"Piooio","asdfasdf","TAKTAKFFF"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +32,12 @@ public class MainActivity extends AppCompatActivity {
         User user = new User("Piotrek", 23);
 
         db.userDao().insertAll(user);
+
+
+
+        ArrayAdapter adapter = new ArrayAdapter<String>(this,R.layout.activity_listview, array);
+        ListView listView = (ListView) findViewById(R.id.listViewOfUsers);
+        listView.setAdapter(adapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
