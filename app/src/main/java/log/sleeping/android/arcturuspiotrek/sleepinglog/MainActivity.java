@@ -38,23 +38,30 @@ public class MainActivity extends AppCompatActivity {
 
         //db.userDao().insertAll(user);
 
-        List<User> userList = new ArrayList<User>();
+        ArrayList<User> userList = new ArrayList<User>();
         userList.addAll(db.userDao().getAll());
 
         String[] names = new String[userList.size()];
         int[] ages = new int[userList.size()];
         String[] combinedNamesAndAges = new String[userList.size()];
 
+        ArrayList<String> combinedList = new ArrayList<String>();
+
         int i = 0;
         for(User u : userList){
             combinedNamesAndAges[i] = u.getName() + " " + Integer.toString(u.getAge());
+            combinedList.add(u.getName() + " " + Integer.toString(u.getAge()));
             names[i] = u.getName();
             ages[i++] = u.getAge();
         }
 
-        ArrayAdapter adapter = new ArrayAdapter<String>(this,R.layout.activity_listview, combinedNamesAndAges);
-        ListView listView = (ListView) findViewById(R.id.listViewOfUsers);
-        listView.setAdapter(adapter);
+        MyCustomAdapter adapterv2 = new MyCustomAdapter(userList, this);
+        ListView lView = (ListView)findViewById(R.id.listViewOfUsers);
+        lView.setAdapter(adapterv2);
+
+        //ArrayAdapter adapter = new ArrayAdapter<String>(this,R.layout.activity_listview, combinedNamesAndAges);
+        //ListView listView = (ListView) findViewById(R.id.listViewOfUsers);
+        //listView.setAdapter(adapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -69,12 +76,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Toast.makeText(getApplicationContext(), "XDDDDDDDDD", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
 
 
 
