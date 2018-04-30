@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
             ages[i++] = u.getAge();
         }
 
-        MyCustomAdapter adapterv2 = new MyCustomAdapter(userList, this);
+        MyCustomAdapter adapterv2 = new MyCustomAdapter(userList, this, MainActivity.this);
         ListView lView = (ListView)findViewById(R.id.listViewOfUsers);
         lView.setAdapter(adapterv2);
 
