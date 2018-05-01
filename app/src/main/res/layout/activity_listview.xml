@@ -11,7 +11,17 @@
         android:layout_alignParentLeft="true"
         android:paddingLeft="8dp"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+
+        android:focusableInTouchMode="false"
+        android:clickable="false"
+        android:focusable="false"
+        />
+    <!--android:focusableInTouchMode="false"
+        android:clickable="false"
+        android:focusable="false"
+
+        By element nie pochlanial klikniecia-->
 
     <Button
         android:id="@+id/delete_btn"
@@ -20,8 +30,11 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
-        android:text="Usuń" />
+        android:text="Usuń"
+        android:focusable="false"/>
+    <!--android:focusable="false"
 
+        By element nie pochlanial klikniecia-->
     <Button
         android:id="@+id/edit_btn"
         android:layout_width="wrap_content"
@@ -29,6 +42,10 @@
         android:layout_toLeftOf="@id/delete_btn"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
-        android:text="Edytuj" />
+        android:text="Edytuj"
+        android:focusable="false"/>
+    <!--android:focusable="false"
+
+    By element nie pochlanial klikniecia-->
 
 </RelativeLayout>

@@ -21,6 +21,8 @@
         </activity>
         <activity android:name=".listview"></activity>
         <activity android:name=".AddUserActivity"></activity>
+        <activity android:name=".SleepsAdapter"></activity>
+        <activity android:name=".SleepListActivity"></activity>
     </application>
 
 </manifest>

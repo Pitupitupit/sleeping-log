@@ -23,8 +23,6 @@ import log.sleeping.android.arcturuspiotrek.sleepinglog.entities.User;
 
 public class MainActivity extends AppCompatActivity {
 
-    String[] array = {"Piooio","asdfasdf","TAKTAKFFF"};
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,14 +36,14 @@ public class MainActivity extends AppCompatActivity {
 
         //db.userDao().insertAll(user);
 
-        ArrayList<User> userList = new ArrayList<User>();
-        userList.addAll(db.userDao().getAll());
+        final ArrayList<User> userList = new ArrayList<User>(db.userDao().getAll());
+        //userList.addAll(db.userDao().getAll());
 
-        String[] names = new String[userList.size()];
-        int[] ages = new int[userList.size()];
-        String[] combinedNamesAndAges = new String[userList.size()];
+        //String[] names = new String[userList.size()];
+        //int[] ages = new int[userList.size()];
+        //String[] combinedNamesAndAges = new String[userList.size()];
 
-        ArrayList<String> combinedList = new ArrayList<String>();
+        /*final ArrayList<String> combinedList = new ArrayList<String>();
 
         int i = 0;
         for(User u : userList){
@@ -53,11 +51,22 @@ public class MainActivity extends AppCompatActivity {
             combinedList.add(u.getName() + " " + Integer.toString(u.getAge()));
             names[i] = u.getName();
             ages[i++] = u.getAge();
-        }
+        }*/
 
         MyCustomAdapter adapterv2 = new MyCustomAdapter(userList, this, MainActivity.this);
         ListView lView = (ListView)findViewById(R.id.listViewOfUsers);
         lView.setAdapter(adapterv2);
+
+        lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Toast.makeText(getApplicationContext(), "XDDDDDDDDD "+userList.get(position).getName(), Toast.LENGTH_SHORT).show();
+
+                Intent sleepListActivity = new Intent(MainActivity.this, SleepListActivity.class);
+                sleepListActivity.putExtra("userId", userList.get(position).getId());
+                MainActivity.this.startActivity(sleepListActivity);
+            }
+        });
 
         //ArrayAdapter adapter = new ArrayAdapter<String>(this,R.layout.activity_listview, combinedNamesAndAges);
         //ListView listView = (ListView) findViewById(R.id.listViewOfUsers);
@@ -76,12 +85,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getApplicationContext(), "XDDDDDDDDD", Toast.LENGTH_SHORT).show();
-            }
-        });*/
+
 
 
 

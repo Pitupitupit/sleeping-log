@@ -3,17 +3,19 @@ package log.sleeping.android.arcturuspiotrek.sleepinglog.entities;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
-import java.util.Date;
+import java.sql.Date;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 @Entity(foreignKeys = @ForeignKey(entity = User.class,
         parentColumns = "id",
-        childColumns = "user_id",
-        onDelete = CASCADE))
-
+        childColumns = "userId",
+        onDelete = CASCADE),
+        indices = {
+        @Index(value = {"userId"})})
 public class Sleep {
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -29,9 +31,9 @@ public class Sleep {
     private int durationm;
 
     @ColumnInfo(name = "date")
-    private Date date;
+    private int date; //sec from epoch? 1970-01-01 00:00:00 UTC.
 
-    public Sleep(int iserId, int durationh, int durationm, Date date) {
+    public Sleep(int userId, int durationh, int durationm, int date) {
         this.userId = userId;
         this.durationh = durationh;
         this.durationm = durationm;
@@ -70,11 +72,11 @@ public class Sleep {
         this.durationm = durationm;
     }
 
-    public Date getDate() {
+    public int getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(int date) {
         this.date = date;
     }
 }
