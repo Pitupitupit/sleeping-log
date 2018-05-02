@@ -15,9 +15,21 @@ public class User {
     @ColumnInfo(name = "age")
     private int age;
 
-    public User(String name, int age) {
+    @ColumnInfo(name = "newbie")
+    private boolean newbie;
+
+    public User(String name, int age, boolean newbie) {
         this.name = name;
         this.age = age;
+        this.newbie = newbie;
+    }
+
+    public boolean getNewbie() {
+        return newbie;
+    }
+
+    public void setNewbie(boolean newbie) {
+        this.newbie = newbie;
     }
 
     public int getId() {

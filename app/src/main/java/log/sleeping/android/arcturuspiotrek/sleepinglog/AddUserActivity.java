@@ -44,7 +44,7 @@ public class AddUserActivity extends AppCompatActivity {
                 name = editTextName.getText().toString();
                 age = Integer.parseInt(editTextAge.getText().toString());
 
-                newUser = new User(name,age);
+                newUser = new User(name,age,true);
                 db.userDao().insertAll(newUser);
 
                 Intent mainActivity = new Intent(AddUserActivity.this, MainActivity.class);

@@ -3,10 +3,13 @@ package log.sleeping.android.arcturuspiotrek.sleepinglog.entities;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
 import java.sql.Date;
+
+import log.sleeping.android.arcturuspiotrek.sleepinglog.SleepListActivity;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
@@ -33,11 +36,32 @@ public class Sleep {
     @ColumnInfo(name = "date")
     private String date;
 
+    @ColumnInfo(name = "dateMilis")
+    private long dateMilis;
+
+    public Sleep(int userId, int durationh, int durationm, long dateMilis) {
+        this.userId = userId;
+        this.durationh = durationh;
+        this.durationm = durationm;
+        this.date = SleepListActivity.getStringDateFromMilis(dateMilis);
+        this.dateMilis = dateMilis;
+    }
+
+    @Ignore
     public Sleep(int userId, int durationh, int durationm, String date) {
         this.userId = userId;
         this.durationh = durationh;
         this.durationm = durationm;
         this.date = date;
+        this.dateMilis = SleepListActivity.getMilisDdateFromString(date);
+    }
+
+    public long getDateMilis() {
+        return dateMilis;
+    }
+
+    public void setDateMilis(long dateMilis) {
+        this.dateMilis = dateMilis;
     }
 
     public int getId() {

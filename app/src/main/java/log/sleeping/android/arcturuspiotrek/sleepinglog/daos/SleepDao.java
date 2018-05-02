@@ -16,7 +16,7 @@ public interface SleepDao {
     @Query("SELECT * FROM sleep WHERE id = (:sleepId)")
     Sleep getSleepById(int sleepId);
 
-    @Query("SELECT * FROM sleep WHERE userId = (:userId)")
+    @Query("SELECT * FROM sleep WHERE userId = (:userId) ORDER BY dateMilis DESC")
     List<Sleep> getSleepfOfUser(int userId);
 
     @Insert

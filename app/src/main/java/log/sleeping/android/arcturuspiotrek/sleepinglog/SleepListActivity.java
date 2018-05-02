@@ -17,8 +17,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import log.sleeping.android.arcturuspiotrek.sleepinglog.db.AppDatabase;
@@ -30,6 +32,7 @@ public class SleepListActivity extends AppCompatActivity {
     int userId;
     String currentDate;
     User user;
+    long currentDateMilis;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,15 +47,17 @@ public class SleepListActivity extends AppCompatActivity {
             userId = 0; //bląd
         }
 
+
         final AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "database-name").allowMainThreadQueries().build();
         user = db.userDao().getUserById(userId);
+
+        System.out.println("USERID: " + user.getId());
         currentDate = getStringDateFromMilis(System.currentTimeMillis());
-        db.SleepDao().insertAll(new Sleep(userId, 1,2,"01-05-2018"));
-        db.SleepDao().insertAll(new Sleep(userId, 2,2,"30-04-2018"));
-        db.SleepDao().insertAll(new Sleep(userId, 3,2,"01-04-2018"));
-        db.SleepDao().insertAll(new Sleep(userId, 4,2,"01-04-2018"));
-        db.SleepDao().insertAll(new Sleep(userId, 5,2,"01-04-2018"));
-        db.SleepDao().insertAll(new Sleep(userId, 6,2,"01-04-2018"));
+        currentDateMilis = System.currentTimeMillis();
+        System.out.println("CURRENTDATE: "+currentDate);
+        if(user.getNewbie()){
+            generateMonthForNewbie(db);
+        }
 
         todaySleep(db);
         final ArrayList<Sleep> sleepList = new ArrayList<Sleep>(db.SleepDao().getSleepfOfUser(user.getId()));
@@ -69,6 +74,26 @@ public class SleepListActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    public void generateMonthForNewbie(AppDatabase db){
+        ArrayList<Sleep> a = new ArrayList<Sleep>();
+        Date date = new Date();
+        date.setTime(currentDateMilis);
+        Calendar c = Calendar.getInstance();
+
+        for(int i=0; i<100; i++){
+            c.setTime(date);
+            c.add(Calendar.DATE, -1);
+            date = c.getTime();
+            a.add(new Sleep(user.getId(), 0, 0, date.getTime()));
+        }
+        Sleep[] sleepArray = a.toArray(new Sleep[a.size()]);
+        db.SleepDao().insertAll(sleepArray);
+
+        user.setNewbie(false);
+        db.userDao().updateUser(user);
 
     }
 
@@ -102,19 +127,35 @@ public class SleepListActivity extends AppCompatActivity {
                 int durationH = Integer.parseInt(editTextH.getText().toString());
                 int durationM = Integer.parseInt(editTextM.getText().toString());
 
-                Sleep s = new Sleep(user.getId(), durationH, durationM, currentDate);
+                Sleep s = new Sleep(user.getId(), durationH, durationM, currentDateMilis);
                 db.SleepDao().insertAll(s);
-                finish();
                 startActivity(getIntent());
+                finish();
+
+                Intent sleepListActivity = new Intent(SleepListActivity.this, SleepListActivity.class);
+                sleepListActivity.putExtra("userId", user.getId());
+                SleepListActivity.this.startActivity(sleepListActivity);
             }
         });
     }
 
-    public String getStringDateFromMilis(long milis){
+    public static String getStringDateFromMilis(long milis){
         Date date = new Date();
         date.setTime(milis);
-        String formattedDate=new SimpleDateFormat("dd-MM-yyyy").format(date);
+        String formattedDate=new SimpleDateFormat("dd.MM.yyyy").format(date);
         return formattedDate;
+    }
+
+    public static long getMilisDdateFromString(String dateString){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        try{
+            Date date = sdf.parse(dateString);
+            return date.getTime();
+        } catch(java.text.ParseException e){
+            System.out.println(e);
+        }
+        return -1; //blad
+
     }
 
     @Override
