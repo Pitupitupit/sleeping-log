@@ -31,9 +31,9 @@ public class Sleep {
     private int durationm;
 
     @ColumnInfo(name = "date")
-    private int date; //sec from epoch? 1970-01-01 00:00:00 UTC.
+    private String date;
 
-    public Sleep(int userId, int durationh, int durationm, int date) {
+    public Sleep(int userId, int durationh, int durationm, String date) {
         this.userId = userId;
         this.durationh = durationh;
         this.durationm = durationm;
@@ -72,11 +72,11 @@ public class Sleep {
         this.durationm = durationm;
     }
 
-    public int getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(int date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }

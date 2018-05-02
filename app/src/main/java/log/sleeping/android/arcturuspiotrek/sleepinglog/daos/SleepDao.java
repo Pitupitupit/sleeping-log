@@ -12,8 +12,6 @@ import log.sleeping.android.arcturuspiotrek.sleepinglog.entities.Sleep;
 
 @Dao
 public interface SleepDao {
-    @Query("SELECT * FROM sleep")
-    List<Sleep> getAll();
 
     @Query("SELECT * FROM sleep WHERE id = (:sleepId)")
     Sleep getSleepById(int sleepId);
@@ -29,4 +27,9 @@ public interface SleepDao {
 
     @Update
     void updateUser(Sleep... sleeps);
+
+    @Query("SELECT * FROM sleep WHERE userId = (:userId) AND date = (:date)")
+    Sleep getSleepByIdAndDate(int userId, String date);
+
+
 }
