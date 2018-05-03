@@ -31,5 +31,8 @@ public interface SleepDao {
     @Query("SELECT * FROM sleep WHERE userId = (:userId) AND date = (:date)")
     Sleep getSleepByIdAndDate(int userId, String date);
 
+    @Query("SELECT * FROM sleep WHERE userId = (:userId) ORDER BY dateMilis DESC LIMIT 1")
+    Sleep getLastSleepOfUser(int userId);
+
 
 }

@@ -22,6 +22,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 
 import log.sleeping.android.arcturuspiotrek.sleepinglog.db.AppDatabase;
 import log.sleeping.android.arcturuspiotrek.sleepinglog.entities.Sleep;
@@ -44,9 +46,8 @@ public class SleepListActivity extends AppCompatActivity {
             userId = extras.getInt("userId");
 
         } else {
-            userId = 0; //bląd
+            userId = -1; //bląd
         }
-
 
         final AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "database-name").allowMainThreadQueries().build();
         user = db.userDao().getUserById(userId);
@@ -55,6 +56,7 @@ public class SleepListActivity extends AppCompatActivity {
         currentDate = getStringDateFromMilis(System.currentTimeMillis());
         currentDateMilis = System.currentTimeMillis();
         System.out.println("CURRENTDATE: "+currentDate);
+
         if(user.getNewbie()){
             generateMonthForNewbie(db);
         }
@@ -65,6 +67,8 @@ public class SleepListActivity extends AppCompatActivity {
         SleepsAdapter adapter = new SleepsAdapter(sleepList, this, SleepListActivity.this);
         ListView lView = (ListView)findViewById(R.id.listViewSleeps);
         lView.setAdapter(adapter);
+
+        fillSleeps(db);
 
         lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -77,13 +81,50 @@ public class SleepListActivity extends AppCompatActivity {
 
     }
 
+    //jeśli użytkownik nie wchodzil przez przynajmniej ponad 1 dzień to trzeba uzupelnić liste snów - daty muszą iśc po kolei - nie moze być dziur
+    public void fillSleeps(AppDatabase db){
+        Date startdate = new Date();
+        startdate.setTime(db.SleepDao().getLastSleepOfUser(user.getId()).getDateMilis());
+
+        Date enddate = new Date();
+        enddate.setTime(currentDateMilis - 24*60*60*1000); //BY NIE BRALO DZISIAJ (-1 dzień)
+
+        ArrayList<Sleep> fillSleepList = new ArrayList<Sleep>();
+
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(startdate);
+        calendar.add(Calendar.DATE, 1); // BY NIE BRALO początkowej daty
+
+        while (calendar.getTime().before(enddate))
+        {
+            Date result = calendar.getTime();
+            fillSleepList.add(new Sleep(userId,0,0,result.getTime()));
+            calendar.add(Calendar.DATE, 1);
+        }
+
+        if(!fillSleepList.isEmpty())
+        {
+            System.out.println("fillsleepLIST NOT EMPTY");
+            for(Sleep s : fillSleepList){
+                System.out.println(s.getDate()+" "+s.getDateMilis());
+            }
+            Sleep[] sleepArray = fillSleepList.toArray(new Sleep[fillSleepList.size()]);
+            db.SleepDao().insertAll(sleepArray);
+
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+
+    }
+
     public void generateMonthForNewbie(AppDatabase db){
         ArrayList<Sleep> a = new ArrayList<Sleep>();
         Date date = new Date();
         date.setTime(currentDateMilis);
         Calendar c = Calendar.getInstance();
 
-        for(int i=0; i<100; i++){
+        for(int i=0; i<30; i++){
             c.setTime(date);
             c.add(Calendar.DATE, -1);
             date = c.getTime();
@@ -129,12 +170,15 @@ public class SleepListActivity extends AppCompatActivity {
 
                 Sleep s = new Sleep(user.getId(), durationH, durationM, currentDateMilis);
                 db.SleepDao().insertAll(s);
-                startActivity(getIntent());
-                finish();
+                //startActivity(getIntent());
+                //finish();
 
-                Intent sleepListActivity = new Intent(SleepListActivity.this, SleepListActivity.class);
+                /*Intent sleepListActivity = new Intent(SleepListActivity.this, SleepListActivity.class);
                 sleepListActivity.putExtra("userId", user.getId());
-                SleepListActivity.this.startActivity(sleepListActivity);
+                SleepListActivity.this.startActivity(sleepListActivity);*/
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
             }
         });
     }
