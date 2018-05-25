@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import log.sleeping.android.arcturuspiotrek.sleepinglog.db.AppDatabase;
 import log.sleeping.android.arcturuspiotrek.sleepinglog.entities.User;
 
+//lista osob
 public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
     private ArrayList<User> list = new ArrayList<User>();
     private Context context;

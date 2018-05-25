@@ -26,7 +26,7 @@ public interface SleepDao {
     void delete(Sleep sleep);
 
     @Update
-    void updateUser(Sleep... sleeps);
+    void updateSleep(Sleep... sleeps);
 
     @Query("SELECT * FROM sleep WHERE userId = (:userId) AND date = (:date)")
     Sleep getSleepByIdAndDate(int userId, String date);

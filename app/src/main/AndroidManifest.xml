@@ -23,6 +23,7 @@
         <activity android:name=".AddUserActivity"></activity>
         <activity android:name=".SleepsAdapter"></activity>
         <activity android:name=".SleepListActivity"></activity>
+        <activity android:name=".StatisticsActivity"></activity>
     </application>
 
 </manifest>

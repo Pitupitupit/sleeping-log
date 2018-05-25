@@ -39,21 +39,26 @@ public class Sleep {
     @ColumnInfo(name = "dateMilis")
     private long dateMilis;
 
-    public Sleep(int userId, int durationh, int durationm, long dateMilis) {
+    @ColumnInfo(name = "description")
+    private String description;
+
+    public Sleep(int userId, int durationh, int durationm, long dateMilis, String description) {
         this.userId = userId;
         this.durationh = durationh;
         this.durationm = durationm;
         this.date = SleepListActivity.getStringDateFromMilis(dateMilis);
         this.dateMilis = dateMilis;
+        this.description = description;
     }
 
     @Ignore
-    public Sleep(int userId, int durationh, int durationm, String date) {
+    public Sleep(int userId, int durationh, int durationm, String date, String description) {
         this.userId = userId;
         this.durationh = durationh;
         this.durationm = durationm;
         this.date = date;
         this.dateMilis = SleepListActivity.getMilisDdateFromString(date);
+        this.description = description;
     }
 
     public long getDateMilis() {
@@ -102,5 +107,13 @@ public class Sleep {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

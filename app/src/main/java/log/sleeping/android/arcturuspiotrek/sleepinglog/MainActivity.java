@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import log.sleeping.android.arcturuspiotrek.sleepinglog.db.AppDatabase;
+import log.sleeping.android.arcturuspiotrek.sleepinglog.entities.Recommendation;
 import log.sleeping.android.arcturuspiotrek.sleepinglog.entities.User;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,28 +29,11 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         final AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "database-name").allowMainThreadQueries().build();
-        //User user = new User("Piotrek", 23);
-
-        //db.userDao().insertAll(user);
+        populateRecommendation(db);
 
         final ArrayList<User> userList = new ArrayList<User>(db.userDao().getAll());
-        //userList.addAll(db.userDao().getAll());
 
-        //String[] names = new String[userList.size()];
-        //int[] ages = new int[userList.size()];
-        //String[] combinedNamesAndAges = new String[userList.size()];
-
-        /*final ArrayList<String> combinedList = new ArrayList<String>();
-
-        int i = 0;
-        for(User u : userList){
-            combinedNamesAndAges[i] = u.getName() + " " + Integer.toString(u.getAge());
-            combinedList.add(u.getName() + " " + Integer.toString(u.getAge()));
-            names[i] = u.getName();
-            ages[i++] = u.getAge();
-        }*/
 
         MyCustomAdapter adapterv2 = new MyCustomAdapter(userList, this, MainActivity.this);
         ListView lView = (ListView)findViewById(R.id.listViewOfUsers);
@@ -67,9 +51,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //ArrayAdapter adapter = new ArrayAdapter<String>(this,R.layout.activity_listview, combinedNamesAndAges);
-        //ListView listView = (ListView) findViewById(R.id.listViewOfUsers);
-        //listView.setAdapter(adapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -90,6 +71,21 @@ public class MainActivity extends AppCompatActivity {
 
         //Toast.makeText(getApplicationContext(), db.userDao().getUserById(1).getName(), Toast.LENGTH_SHORT).show();
 
+    }
+
+    public void populateRecommendation(AppDatabase db){
+        if(db.RecommenadtionDao().getAll().size()==0){
+            Recommendation[] listRec = new Recommendation[7];
+            listRec[0] = new Recommendation("Toddlers", 1,2,11,14);
+            listRec[1] = new Recommendation("Preschoolers ", 3,5,10,13);
+            listRec[2] = new Recommendation("School age children ", 6,13,9,11);
+            listRec[3] = new Recommendation("Teenagers", 14,17,8,10);
+            listRec[4] = new Recommendation("Younger adults ", 18,25,7,9);
+            listRec[5] = new Recommendation("Adults", 26,64,7,9);
+            listRec[6] = new Recommendation("Older adults", 65,200,7,8);
+
+            db.RecommenadtionDao().insertAll(listRec);
+        }
     }
 
     @Override
