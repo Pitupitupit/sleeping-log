@@ -14,8 +14,11 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 
 import log.sleeping.android.arcturuspiotrek.sleepinglog.adapters.GraphsAdapter;
 import log.sleeping.android.arcturuspiotrek.sleepinglog.db.AppDatabase;
@@ -63,9 +66,35 @@ public class StatisticsActivity extends AppCompatActivity {
                 prevMonth = currMonth;
             }
             gh.getListSleeps().add(s);
-            System.out.println(date.get(Calendar.MONTH));
+            //System.out.println(date.get(Calendar.MONTH));
 
         }
+        listGraphsData.add(gh);
+
+        Iterator<GraphData> iter = listGraphsData.iterator();
+        while (iter.hasNext()) {
+            GraphData x = iter.next();
+            if (x.getListSleeps().size()==0)
+            {
+                iter.remove();
+                System.out.println("usuwam");
+            }
+        }
+
+        for(GraphData x : listGraphsData)
+        {
+            Collections.reverse(x.getListSleeps());
+        }
+
+        for(GraphData x : listGraphsData)
+        {
+            for(Sleep s : x.getListSleeps())
+            {
+                System.out.println(s.getDate());
+            }
+        }
+
+        System.out.println("statystyki suze:" +listGraphsData.size());
 
         GraphsAdapter graphsAdapter = new GraphsAdapter(this, user, listGraphsData);
         ListView lView = (ListView)findViewById(R.id.listViewGraphs);
