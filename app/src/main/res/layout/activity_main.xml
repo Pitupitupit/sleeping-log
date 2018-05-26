@@ -25,10 +25,17 @@
 
         </android.support.design.widget.AppBarLayout>-->
 
-        <ListView
+        <GridView
             android:id="@+id/listViewOfUsers"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:background="?attr/colorPrimary"
+            android:columnWidth="100dp"
+            android:gravity="center"
+            android:horizontalSpacing="10dp"
+            android:numColumns="auto_fit"
+            android:stretchMode="spacingWidthUniform"
+            android:verticalSpacing="24dp" />
 
     </LinearLayout>
 

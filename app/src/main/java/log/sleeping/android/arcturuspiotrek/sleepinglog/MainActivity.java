@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         MyCustomAdapter adapterv2 = new MyCustomAdapter(userList, this, MainActivity.this);
-        ListView lView = (ListView)findViewById(R.id.listViewOfUsers);
+        GridView lView = (GridView) findViewById(R.id.listViewOfUsers);
         lView.setAdapter(adapterv2);
 
         lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
