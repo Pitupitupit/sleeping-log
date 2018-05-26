@@ -42,14 +42,16 @@ public class AddUserActivity extends AppCompatActivity {
                 buttonSaveUser.setClickable(false);
 
                 name = editTextName.getText().toString();
-                age = Integer.parseInt(editTextAge.getText().toString());
+                if(editTextAge.getText().toString().equals("")){
+                    age = -1;
+                }
+                else
+                    age = Integer.parseInt(editTextAge.getText().toString());
 
                 newUser = new User(name,age,true);
                 db.userDao().insertAll(newUser);
 
                 Intent mainActivity = new Intent(AddUserActivity.this, MainActivity.class);
-                //main.putExtra("userRef", userRef);
-                //main.putExtra("login", login);
                 AddUserActivity.this.startActivity(mainActivity);
             }
         });

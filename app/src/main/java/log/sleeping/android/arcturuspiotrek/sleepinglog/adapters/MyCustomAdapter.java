@@ -1,4 +1,4 @@
-package log.sleeping.android.arcturuspiotrek.sleepinglog;
+package log.sleeping.android.arcturuspiotrek.sleepinglog.adapters;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import log.sleeping.android.arcturuspiotrek.sleepinglog.R;
 import log.sleeping.android.arcturuspiotrek.sleepinglog.db.AppDatabase;
 import log.sleeping.android.arcturuspiotrek.sleepinglog.entities.User;
 

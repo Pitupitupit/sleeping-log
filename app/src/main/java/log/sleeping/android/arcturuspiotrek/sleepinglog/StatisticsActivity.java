@@ -6,16 +6,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
+import log.sleeping.android.arcturuspiotrek.sleepinglog.adapters.GraphsAdapter;
 import log.sleeping.android.arcturuspiotrek.sleepinglog.db.AppDatabase;
+import log.sleeping.android.arcturuspiotrek.sleepinglog.entities.Recommendation;
 import log.sleeping.android.arcturuspiotrek.sleepinglog.entities.Sleep;
 import log.sleeping.android.arcturuspiotrek.sleepinglog.entities.User;
+import log.sleeping.android.arcturuspiotrek.sleepinglog.models.GraphData;
 
 public class StatisticsActivity extends AppCompatActivity {
     int userId;
@@ -36,18 +43,33 @@ public class StatisticsActivity extends AppCompatActivity {
 
         final AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "database-name").allowMainThreadQueries().build();
         user = db.userDao().getUserById(userId);
+        Recommendation rec = SleepListActivity.determineUserType(db, user);
 
-        GraphView graph = (GraphView) findViewById(R.id.graph);
+        ArrayList<GraphData> listGraphsData = new ArrayList<GraphData>();
 
-        //graph.getViewport().setScalable(true);
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
-                new DataPoint(0, 1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3),
-                new DataPoint(3, 2),
-                new DataPoint(4, 6)
-        });
-        graph.addSeries(series);
+        ArrayList<Sleep> listSleeps = new ArrayList<Sleep>(db.SleepDao().getSleepfOfUser(userId));
+
+        int currMonth = 0, prevMonth = 0;
+        GraphData gh = new GraphData(user, rec, new ArrayList<Sleep>());
+        for(Sleep s : listSleeps)
+        {
+            Calendar date = GregorianCalendar.getInstance();
+            date.setTimeInMillis(s.getDateMilis());
+            currMonth = date.get(Calendar.MONTH);
+            if(currMonth != prevMonth)
+            {
+                listGraphsData.add(gh);
+                gh = new GraphData(user, rec, new ArrayList<Sleep>());
+                prevMonth = currMonth;
+            }
+            gh.getListSleeps().add(s);
+            System.out.println(date.get(Calendar.MONTH));
+
+        }
+
+        GraphsAdapter graphsAdapter = new GraphsAdapter(this, user, listGraphsData);
+        ListView lView = (ListView)findViewById(R.id.listViewGraphs);
+        lView.setAdapter(graphsAdapter);
 
     }
 

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,8 +13,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import log.sleeping.android.arcturuspiotrek.sleepinglog.adapters.MyCustomAdapter;
 import log.sleeping.android.arcturuspiotrek.sleepinglog.db.AppDatabase;
 import log.sleeping.android.arcturuspiotrek.sleepinglog.entities.Recommendation;
 import log.sleeping.android.arcturuspiotrek.sleepinglog.entities.User;
@@ -26,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
         final AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "database-name").allowMainThreadQueries().build();
         populateRecommendation(db);
@@ -56,11 +55,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Snackbar.make(view, db.userDao().getUserById(1).getName(), Snackbar.LENGTH_LONG)
-                //        .setAction("Action", null).show();
                 Intent addUserActivity = new Intent(MainActivity.this, AddUserActivity.class);
-                //main.putExtra("userRef", userRef);
-                //main.putExtra("login", login);
                 MainActivity.this.startActivity(addUserActivity);
             }
         });
