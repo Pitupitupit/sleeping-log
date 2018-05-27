@@ -2,18 +2,23 @@ package log.sleeping.android.arcturuspiotrek.sleepinglog.adapters;
 
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.OnDataPointTapListener;
+import com.jjoe64.graphview.series.Series;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,7 +27,9 @@ import java.util.Date;
 import java.util.Iterator;
 
 import log.sleeping.android.arcturuspiotrek.sleepinglog.R;
+import log.sleeping.android.arcturuspiotrek.sleepinglog.SleepListActivity;
 import log.sleeping.android.arcturuspiotrek.sleepinglog.db.AppDatabase;
+import log.sleeping.android.arcturuspiotrek.sleepinglog.entities.Recommendation;
 import log.sleeping.android.arcturuspiotrek.sleepinglog.entities.Sleep;
 import log.sleeping.android.arcturuspiotrek.sleepinglog.entities.User;
 import log.sleeping.android.arcturuspiotrek.sleepinglog.models.GraphData;
@@ -44,7 +51,6 @@ public class GraphsAdapter extends BaseAdapter implements ListAdapter {
 
     @Override
     public int getCount() {
-        System.out.println("w getcount"+listGraphsData.size());
         return listGraphsData.size();
     }
 
@@ -69,50 +75,48 @@ public class GraphsAdapter extends BaseAdapter implements ListAdapter {
 
         GraphView graph = (GraphView) view.findViewById(R.id.graph_listView);
 
+        int maxH =0;
         ArrayList<DataPoint> listDataPoints = new ArrayList<DataPoint>();
         for(Sleep s : listGraphsData.get(position).getListSleeps())
         {
+            //if do znalezienia maxh
+            if(s.getDurationh() > maxH)
+            {
+                maxH = s.getDurationh();
+            }
             Calendar c = Calendar.getInstance();
             c.setTimeInMillis(s.getDateMilis());
-            Date d = c.getTime();
-            //listDataPoints.add(new DataPoint(d,s.getDurationh()+s.getDurationm()/60));
+
             listDataPoints.add(new DataPoint(c.get(Calendar.DAY_OF_MONTH),s.getDurationh()+s.getDurationm()/60));
+
         }
 
+
         DataPoint[] arrayDataPoints = listDataPoints.toArray(new DataPoint[listDataPoints.size()]);
+        System.out.println("LENGHT:"+arrayDataPoints.length);
 
-
-        //graph.getViewport().setScalable(true);
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>( arrayDataPoints );
-        graph.addSeries(series);
-
-        //graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(context));
-        //graph.getGridLabelRenderer().setNumHorizontalLabels(3);
-
-/*
-        // set manual x bounds to have nice steps
-
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(listGraphsData.get(position).getListSleeps().get(0).getDateMilis());
-        Date d = c.getTime();
-
-        graph.getViewport().setMinX(d.getTime());
-        c.setTimeInMillis(listGraphsData.get(position).getListSleeps().get(listGraphsData.get(position).getListSleeps().size()-1).getDateMilis());
-        d = c.getTime();
-        graph.getViewport().setMaxX(d.getTime());
-        graph.getViewport().setXAxisBoundsManual(true);
-
-        // as we use dates as labels, the human rounding to nice readable numbers
-        // is not necessary
-        graph.getGridLabelRenderer().setHumanRounding(false);
-*/
-        // activate horizontal zooming and scrolling
-        graph.getViewport().setScalable(true);
-
-        // set manual X bounds
+         LineGraphSeries<DataPoint> series = new LineGraphSeries<>( arrayDataPoints );
+        series.setOnDataPointTapListener(new OnDataPointTapListener() {
+            @Override
+            public void onTap(Series series, DataPointInterface dataPoint) {
+                Toast.makeText(context, "Series1: On Data Point clicked: "+dataPoint, Toast.LENGTH_SHORT).show();
+            }
+        });
+        // VVVVVVVVVVVV !!!!!!
+        graph.removeAllSeries(); // <<<<<<<<<  !!!!!!
+        // ^^^^^^^^^^^^ !!!!!!
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setMinX(arrayDataPoints[0].getX());
-        graph.getViewport().setMaxY(arrayDataPoints[arrayDataPoints.length-1].getX());
+        graph.getViewport().setMaxX(arrayDataPoints[arrayDataPoints.length-1].getX());
+        graph.getViewport().setYAxisBoundsManual(true);
+        graph.getViewport().setMinY(0);
+        graph.getViewport().setMaxY(maxH+2);
+        graph.addSeries(series);
+        graph.getViewport().setScalable(true);
+
+
+
+
 
 
         TextView monthYear = (TextView)view.findViewById(R.id.textViewMonthYear);
@@ -122,9 +126,35 @@ public class GraphsAdapter extends BaseAdapter implements ListAdapter {
 
         double sumHours=0, sumMinutes=0, sumAllMinutes =0;
         int averageHours, averageMin;
+        int maxHours =0, maxMinutes =0, minHours = 999, minMinutes = 999;
         TextView average = (TextView)view.findViewById(R.id.textView_average);
         for(Sleep s : listGraphsData.get(position).getListSleeps())
         {
+            if(s.getDurationh() > maxHours)
+            {
+                maxHours = s.getDurationh();
+                maxMinutes = s.getDurationm();
+            }
+            else if(s.getDurationh() == maxHours)
+            {
+                if(s.getDurationm() > maxMinutes)
+                {
+                    maxMinutes = s.getDurationm();
+                }
+            }
+
+            if(s.getDurationh() < minHours)
+            {
+                minHours = s.getDurationh();
+                minMinutes = s.getDurationm();
+            }
+            else if(s.getDurationh() == maxHours)
+            {
+                if(s.getDurationm() < minMinutes)
+                {
+                    minMinutes = s.getDurationm();
+                }
+            }
             sumHours = sumHours+s.getDurationh();
             sumMinutes = sumMinutes+s.getDurationm();
         }
@@ -134,7 +164,31 @@ public class GraphsAdapter extends BaseAdapter implements ListAdapter {
         averageMin =  (int) Math.round((sumAllMinutes/listGraphsData.get(position).getListSleeps().size()%60));
         System.out.println("sumHours:"+sumHours+" sumMinutes:"+sumMinutes+" sumAllminutes:"+sumAllMinutes);
 
-        average.setText("Spałeś/aś średnio "+averageHours+"h "+averageMin+"min");
+
+
+        //kolor pod kreską wykresu
+        Recommendation rec = SleepListActivity.determineUserType(db,user);
+        series.setDrawBackground(true);
+        System.out.println("rec min:"+rec.getMinHours()+" rec max:"+rec.getMaxHours());
+        System.out.println("averageHours+(averageMin/60)"+(averageHours+(averageMin/60.00)));
+        String stringToAverageRate = "";
+        if(averageHours+(averageMin/60) >= rec.getMinHours() && averageHours+(averageMin/60) <= rec.getMaxHours())
+        {
+            stringToAverageRate = "Świetnie!";
+            series.setBackgroundColor(Color.parseColor("#90ce4e"));
+        }
+        else if(averageHours+(averageMin/60) < rec.getMinHours())
+        {
+            stringToAverageRate = "Za krótko śpisz!";
+            series.setBackgroundColor(Color.parseColor("#ff6666"));
+        }
+        else if(averageHours+(averageMin/60) > rec.getMaxHours())
+        {
+            stringToAverageRate = "Za dużo śpisz!";
+            series.setBackgroundColor(Color.parseColor("#ff6666"));
+        }
+
+        average.setText("\u2022 Spałeś/aś średnio "+averageHours+"h "+averageMin+"min ("+stringToAverageRate+")\n\u2022 Najdłużej "+maxHours+"h "+maxMinutes+"min\n\u2022 Najkrócej "+minHours+"h "+minMinutes+"min\n");
 
         return view;
     }

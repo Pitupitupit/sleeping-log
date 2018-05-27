@@ -1,4 +1,15 @@
 <resources>
-    <string name="app_name">Sleeping log</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">Dziennik czasu snu</string>
+    <string name="action_settings">Informacje</string>
+    <string name="info">Czasy snu ustalane są na podstawie danych udostępnianych przez Nation Sleep Foundation.\n
+\n
+• Toddlers (1-2 years): Sleep range 11-14 hours\n
+• Preschoolers (3-5): Sleep range 10-13 hours\n
+• School age children (6-13): Sleep range 9-11 hours\n
+• Teenagers (14-17): Sleep range 8-10 hours\n
+• Younger adults (18-25): Sleep range 7-9 hours\n
+• Adults (26-64): Sleep range 7-9 hours\n
+• Older adults (65+): Sleep range 7-8 hours\n
+
+    </string>
 </resources>

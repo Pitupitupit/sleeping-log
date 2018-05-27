@@ -1,16 +1,23 @@
 package log.sleeping.android.arcturuspiotrek.sleepinglog;
 
+import android.app.AlertDialog;
 import android.arch.persistence.room.Room;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -26,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("Dziennik czasu snu - OSOBY");
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
 
@@ -78,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             listRec[3] = new Recommendation("Teenagers", 14,17,8,10);
             listRec[4] = new Recommendation("Younger adults ", 18,25,7,9);
             listRec[5] = new Recommendation("Adults", 26,64,7,9);
-            listRec[6] = new Recommendation("Older adults", 65,200,7,8);
+            listRec[6] = new Recommendation("Older adults", 65,9999,7,8);
 
             db.RecommenadtionDao().insertAll(listRec);
         }
@@ -96,14 +104,39 @@ public class MainActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+                alertDialog.setTitle("Informacje nt. odpowiedniego czasu snu");
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+                LinearLayout layout = new LinearLayout(this);
+                layout.setOrientation(LinearLayout.VERTICAL);
+
+                final TextView textViewContent = new TextView(this);
+                textViewContent.setText(R.string.info);
+                textViewContent.setTextSize(17);
+                textViewContent.setTextColor(Color.parseColor("#000000"));
+                layout.addView(textViewContent);
+
+                alertDialog.setView(layout);
+
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
         }
 
-        return super.onOptionsItemSelected(item);
     }
 
 }

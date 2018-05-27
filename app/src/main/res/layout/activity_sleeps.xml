@@ -11,20 +11,37 @@
         <Button
             android:id="@+id/buttonStatistics"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Statystyki" />
+            android:layout_height="60dp"
+            android:text="Statystyki"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="22dp"
+            android:background="@color/colorAccent"/>
+
+        <TextView
+            android:id="@+id/howMuchSleepShould"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@android:color/black"
+            android:textSize="17sp"
+            android:text="asdf"
+            android:gravity="center"
+            />
 
         <LinearLayout
             android:id="@+id/todayLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="20dp">
 
             <TextView
                 android:id="@+id/textViewToday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textColor="@android:color/black"
+                android:textSize="17sp"
                 android:text="Dzisiaj" />
 
             <EditText
@@ -40,6 +57,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textColor="@android:color/black"
+                android:textSize="17sp"
                 android:text="h" />
 
             <EditText
@@ -55,22 +74,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textColor="@android:color/black"
+                android:textSize="17sp"
                 android:text="min" />
 
             <Button
-                android:id="@+id/buttonMore"
+                android:id="@+id/buttonSaveToday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Więcej" />
+
+                android:textColor="@color/colorAccent"
+                android:text="Zapisz" />
 
         </LinearLayout>
-
-        <Button
-            android:id="@+id/buttonSaveToday"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Zapisz" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -83,6 +99,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
+
 
     </LinearLayout>
 

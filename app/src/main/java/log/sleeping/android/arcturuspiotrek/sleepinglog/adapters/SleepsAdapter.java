@@ -81,10 +81,10 @@ public class SleepsAdapter extends BaseAdapter implements ListAdapter {
             float duration = list.get(position).getDurationh() + list.get(position).getDurationm()/60;
             System.out.println("rec min:"+rec.getMinHours()+" rec max:"+rec.getMaxHours()+" duration:"+duration);
             if(duration >= rec.getMinHours() && duration <= rec.getMaxHours()){
-                listItemText.setBackgroundColor(Color.GREEN);
+                view.setBackgroundColor(Color.parseColor("#90ce4e"));
             }
             else {
-                listItemText.setBackgroundColor(Color.RED);
+                view.setBackgroundColor(Color.parseColor("#ff9999"));
             }
 
         }
@@ -118,6 +118,8 @@ public class SleepsAdapter extends BaseAdapter implements ListAdapter {
 
                     final TextView textViewH = new TextView(activity);
                     textViewH.setText("h");
+                    textViewH.setTextSize(17);
+                    textViewH.setTextColor(Color.parseColor("#000000"));
                     hoursMins.addView(textViewH);
 
                     final EditText editTextMins = new EditText(activity);
@@ -127,6 +129,8 @@ public class SleepsAdapter extends BaseAdapter implements ListAdapter {
 
                     final TextView textViewM = new TextView(activity);
                     textViewM.setText("min");
+                    textViewM.setTextSize(17);
+                    textViewM.setTextColor(Color.parseColor("#000000"));
                     hoursMins.addView(textViewM);
 
                  layout.addView(hoursMins);
